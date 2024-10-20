@@ -11,6 +11,7 @@ from tqdm import tqdm
 import pickle
 import joblib
 
+# Learning with Prototype Model
 class LwP:
   def __init__(self):
     self.u0 = None
@@ -27,17 +28,20 @@ class LwP:
         Y.append(1)
     return np.array(Y)
 
+# Loading the training dataset
 dEmot = pd.read_csv("datasets/train/train_emoticon.csv")
 
 EmX = np.array(dEmot.iloc[:,0].values)
 EmY = np.array(dEmot.iloc[:,1].values)
 
+# Removing emojis which appear in every datapoint
 emojis = ['😛','😑','🛐','😣','🙯','🚼','🙼']
 
 for i in range(len(EmX)):
   for j in range(len(emojis)):
     EmX[i] = EmX[i].replace(emojis[j], '')
 
+# Finding the One Hot Encoding transformation
 TotalEm = []
 for i in range(0, len(EmX)):
   for j in range(0, len(EmX[i])):
@@ -93,18 +97,23 @@ New_X = np.array(New_X)
 X_train = New_X
 Y_train = EmY
 
+# Fitting SVM Model
 SVCClf = SVC(kernel = 'linear',gamma = 'scale', shrinking = False,)
 SVCClf.fit(X_train, Y_train)
 
+# Fitting Logistic Regression
 LogReg = LogisticRegression()
 LogReg.fit(X_train, Y_train)
 
+# Fitting Random Forest
 RF = RandomForestClassifier(n_estimators = 100)
 RF.fit(X_train, Y_train)
 
+# Fitting Learning With Prototypes
 LP = LwP()
 LP.fit(X_train, Y_train)
 
+# Saving the models
 joblib.dump(SVCClf, "SVM_D1.pkl")
 
 joblib.dump(RF, "Random_Forest_D1.pkl")
