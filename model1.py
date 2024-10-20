@@ -1,3 +1,4 @@
+# Loading library
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,18 +12,22 @@ from tqdm import tqdm
 import pickle
 import joblib
 
+# Loading the Testing dataset
 dEmot = pd.read_csv("datasets/test/test_emoticon.csv")
 
 EmX = np.array(dEmot.iloc[:,0].values)
 
+# Emojis which appear in every datapoint
 emojis = ['😛','😑','🛐','😣','🙯','🚼','🙼']
 
 for i in range(len(EmX)):
   for j in range(len(emojis)):
     EmX[i] = EmX[i].replace(emojis[j], '')
 
+# Loading the Labels for One Hot Encoding
 le = pickle.load(open("all_weights/final_svm_dataset1/le.pkl", 'rb'))
 
+# If a new emoji comes which is not in the training dataset, we set it to '0'.
 for i in range(0, len(EmX)):
   for j in range(0, len(EmX[i])):
     if EmX[i][j] not in le.classes_:
@@ -34,6 +39,7 @@ for i in range(0, len(EmX)):
     TotalEm.append(EmX[i][j])
 Transformation = le.transform(TotalEm)
 
+# Loading the model weights
 SVM =  joblib.load("all_weights/final_svm_dataset1/SVM_D1.pkl")
 
 New_X = []
@@ -78,6 +84,7 @@ New_X = np.array(New_X)
 
 X_test = New_X
 
+# Predicting with the SVM Model
 Y_test = np.array(SVM.predict(X_test))
 
 # Save the predictions to a text file
