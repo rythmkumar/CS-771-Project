@@ -32,6 +32,7 @@ mini-project-1/
 ├── model_train_1.py
 ├── model_train_2.py
 ├── model_train_3.py
+├── mini-project-1.pdf
 ├── README.md
 └── 69.py
 ```
